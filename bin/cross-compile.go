@@ -67,6 +67,7 @@ var osarches = []string{
 	"plan9/386",
 	"plan9/amd64",
 	"solaris/amd64",
+	"js/wasm",
 }
 
 // Special environment flags for a given arch
@@ -320,7 +321,7 @@ func compileArch(version, goos, goarch, dir string) bool {
 		log.Printf("Error compiling %s/%s: %v", goos, goarch, err)
 		return false
 	}
-	if !*compileOnly {
+	if !*compileOnly && goos != "js" {
 		artifacts := []string{buildZip(dir)}
 		// build a .deb and .rpm if appropriate
 		if goos == "linux" {
