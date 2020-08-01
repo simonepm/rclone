@@ -321,15 +321,17 @@ func compileArch(version, goos, goarch, dir string) bool {
 		log.Printf("Error compiling %s/%s: %v", goos, goarch, err)
 		return false
 	}
-	if !*compileOnly && goos != "js" {
-		artifacts := []string{buildZip(dir)}
-		// build a .deb and .rpm if appropriate
-		if goos == "linux" {
-			artifacts = append(artifacts, buildDebAndRpm(dir, version, goarch)...)
-		}
-		if *copyAs != "" {
-			for _, artifact := range artifacts {
-				run("ln", artifact, strings.Replace(artifact, "-"+version, "-"+*copyAs, 1))
+	if !*compileOnly {
+		if goos != "js" {
+			artifacts := []string{buildZip(dir)}
+			// build a .deb and .rpm if appropriate
+			if goos == "linux" {
+				artifacts = append(artifacts, buildDebAndRpm(dir, version, goarch)...)
+			}
+			if *copyAs != "" {
+				for _, artifact := range artifacts {
+					run("ln", artifact, strings.Replace(artifact, "-"+version, "-"+*copyAs, 1))
+				}
 			}
 		}
 		// tidy up
